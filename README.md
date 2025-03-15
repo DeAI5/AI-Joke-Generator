@@ -43,6 +43,25 @@ npm run dev
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+6. To create a new PR, create a branch for your feature or fix:
+```bash
+git checkout -b feature/add-new-joke-topics
+```
+
+7. Make and commit your changes:
+```bash
+git add .
+git commit -m "😹 Added new joke topics"
+```
+
+8. Push Your Changes:
+```bash
+git push origin feature/add-new-joke-topics
+```
+
+9. Open a Pull Request (PR) 🎉
+
+
 ## License
 
 MIT
