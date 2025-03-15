@@ -61,7 +61,6 @@ git push origin feature/add-new-joke-topics
 
 9. Open a Pull Request (PR) 🎉
 
-
 ## License
 
 MIT
