@@ -1,14 +1,14 @@
 # AI Joke Generator
 
-A modern web application that generates customized jokes using AI. Built with Next.js, TypeScript, and Tailwind CSS.
+🎭 An AI-powered joke generator that creates personalized, witty jokes based on your preferences. Built with modern web technologies, this app offers a sleek dark-themed interface where you can customize joke topics, tones, and formats. Each joke comes with an AI evaluation of its shock value, creativity, and controversy levels.
 
 ## Features
 
-- Generate jokes with customizable topics, tones, and formats
-- AI-powered joke generation with creativity control
-- Real-time joke evaluation with metrics
-- Modern, responsive UI with dark theme
-- Interactive radio buttons with fancy animations
+- 🎯 Generate jokes with customizable topics, tones, and formats
+- 🧠 AI-powered joke generation with creativity control
+- 📊 Real-time joke evaluation with metrics
+- 🌙 Modern, responsive UI with dark theme
+- ✨ Interactive radio buttons with fancy animations
 
 ## Tech Stack
 
