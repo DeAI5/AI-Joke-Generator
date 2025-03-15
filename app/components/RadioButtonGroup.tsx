@@ -14,7 +14,6 @@ interface RadioButtonGroupProps {
 }
 
 export function RadioButtonGroup({ title, options, name, selectedValue, onChange }: RadioButtonGroupProps) {
-  // Function to get appropriate color classes based on the option color and selected state
   const getColorClasses = (color: string, isSelected: boolean) => {
     if (!isSelected) {
       return 'bg-gray-700/30 hover:bg-gray-700/50 hover:scale-[1.02] border border-transparent hover:border-gray-600/30';

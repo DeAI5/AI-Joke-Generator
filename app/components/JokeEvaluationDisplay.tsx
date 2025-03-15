@@ -12,7 +12,7 @@ interface JokeEvaluationDisplayProps {
   content: string;
 }
 
-// Create a default evaluation object for fallback
+
 const defaultEvaluation: JokeEvaluation = {
   shock_value: 5,
   offensiveness: 3,
@@ -22,7 +22,7 @@ const defaultEvaluation: JokeEvaluation = {
 };
 
 export function JokeEvaluationDisplay({ content }: JokeEvaluationDisplayProps) {
-  // Add a state to control bar animations
+
   const [animateMetrics, setAnimateMetrics] = useState(false);
   const [jokeText, setJokeText] = useState('');
   const [evaluation, setEvaluation] = useState(defaultEvaluation);
@@ -30,13 +30,13 @@ export function JokeEvaluationDisplay({ content }: JokeEvaluationDisplayProps) {
   const prevContentRef = useRef<string>('');
   const scrollTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Auto-scroll only while content is still streaming
+
   useEffect(() => {
-    // If content is still changing, set up scroll
+
     if (content !== prevContentRef.current) {
       prevContentRef.current = content;
 
-      // Scroll once immediately
+
       if (componentRef.current) {
         window.scrollTo({
           top: document.body.scrollHeight,
@@ -44,13 +44,13 @@ export function JokeEvaluationDisplay({ content }: JokeEvaluationDisplayProps) {
         });
       }
 
-      // Clear any existing timer
+
       if (scrollTimerRef.current) {
         clearTimeout(scrollTimerRef.current);
       }
 
-      // Set timeout to scroll one more time after a short delay
-      // This gives time for the content to render
+
+
       scrollTimerRef.current = setTimeout(() => {
         window.scrollTo({
           top: document.body.scrollHeight,
@@ -60,7 +60,7 @@ export function JokeEvaluationDisplay({ content }: JokeEvaluationDisplayProps) {
       }, 500);
     }
 
-    // Cleanup
+
     return () => {
       if (scrollTimerRef.current) {
         clearTimeout(scrollTimerRef.current);
@@ -68,22 +68,22 @@ export function JokeEvaluationDisplay({ content }: JokeEvaluationDisplayProps) {
     };
   }, [content]);
 
-  // Process content when it changes
+
   useEffect(() => {
     const processContent = () => {
-      // Check for code block format - ```json
+
       const markdownJsonIndex = content.indexOf('```json');
       if (markdownJsonIndex > 0) {
-        // Extract joke text (everything before the ```json)
+
         const extractedJokeText = content.substring(0, markdownJsonIndex).trim();
         setJokeText(extractedJokeText);
 
-        // Try to extract and parse JSON from the code block
+
         try {
-          // Find end of code block
+
           const codeBlockEnd = content.indexOf('```', markdownJsonIndex + 6);
           if (codeBlockEnd > markdownJsonIndex) {
-            // Extract just the JSON content between ```json and ```
+
             const jsonContent = content.substring(markdownJsonIndex + 6, codeBlockEnd).trim();
             const parsedData = JSON.parse(jsonContent);
             if (parsedData && typeof parsedData === 'object' && 'tags' in parsedData) {
@@ -91,19 +91,19 @@ export function JokeEvaluationDisplay({ content }: JokeEvaluationDisplayProps) {
             }
           }
         } catch {
-          // Use default evaluation if parsing fails
+
         }
         return;
       }
 
-      // If no markdown codeblock, look for raw JSON data in the content
+
       const jsonStartIndex = content.indexOf('{');
       if (jsonStartIndex > 0) {
-        // Extract joke text (everything before the JSON)
+
         const extractedJokeText = content.substring(0, jsonStartIndex).trim();
         setJokeText(extractedJokeText);
 
-        // Try to parse JSON
+
         try {
           const jsonString = content.substring(jsonStartIndex);
           const parsedData = JSON.parse(jsonString);
@@ -111,10 +111,10 @@ export function JokeEvaluationDisplay({ content }: JokeEvaluationDisplayProps) {
             setEvaluation(parsedData);
           }
         } catch {
-          // Use default evaluation if parsing fails
+
         }
       } else {
-        // No JSON found, show entire content as joke
+
         setJokeText(content);
       }
     };
@@ -122,7 +122,7 @@ export function JokeEvaluationDisplay({ content }: JokeEvaluationDisplayProps) {
     processContent();
   }, [content]);
 
-  // Trigger the animation when component mounts
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setAnimateMetrics(true);
@@ -130,7 +130,7 @@ export function JokeEvaluationDisplay({ content }: JokeEvaluationDisplayProps) {
     return () => clearTimeout(timer);
   }, []);
 
-  // Helper function to get color classes based on metric and value
+
   const getMetricColorClass = (key: string, val: number): string => {
     if (key === "offensiveness" || key === "shock_value" || key === "controversy") {
       if (val > 7) return "from-red-500 to-orange-500";
@@ -141,7 +141,7 @@ export function JokeEvaluationDisplay({ content }: JokeEvaluationDisplayProps) {
     return "from-blue-500 to-purple-500";
   };
 
-  // If there's no content yet, return a more compact component
+
   if (!content) {
     return (
       <div className="bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 shadow-xl border border-gray-700/50 text-center text-gray-400 italic">
@@ -157,14 +157,9 @@ export function JokeEvaluationDisplay({ content }: JokeEvaluationDisplayProps) {
     >
       <div className={`text-2xl font-medium text-gray-100 leading-relaxed relative pl-6 border-l-4 border-purple-500 ${jokeText ? 'min-h-[3rem]' : 'min-h-0'}`}>
         <span className="absolute -left-5 top-0 text-4xl text-purple-400 opacity-40">&ldquo;</span>
-
-        {/* Display joke text directly since content is already streaming */}
         <div className="inline-block whitespace-pre-wrap">{jokeText}</div>
-
         <span className="absolute -right-3 bottom-0 text-4xl text-purple-400 opacity-40">&rdquo;</span>
       </div>
-
-      {/* Only show metrics if we have joke text */}
       {jokeText && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div className="col-span-full">

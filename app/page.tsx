@@ -8,7 +8,6 @@ import { CreativitySlider } from "./components/CreativitySlider";
 import { topics, tones, jokeTypes } from "./constants/jokeOptions";
 import dynamic from "next/dynamic";
 
-// Import confetti dynamically to avoid SSR issues
 const ReactConfetti = dynamic(() => import("react-confetti"), { ssr: false });
 
 interface JokeState {
@@ -32,7 +31,6 @@ export default function Chat() {
     height: typeof window !== 'undefined' ? window.innerHeight : 0,
   });
 
-  // Update window size on resize
   useEffect(() => {
     const handleResize = () => {
       setWindowSize({
@@ -47,13 +45,12 @@ export default function Chat() {
     }
   }, []);
 
-  // Show confetti when a new joke is generated
+
   useEffect(() => {
     if (messages.length > 0 && !messages[messages.length - 1]?.content.startsWith("Generate")) {
       setShowConfetti(true);
       const timer = setTimeout(() => setShowConfetti(false), 5000);
 
-      // Scroll to the bottom smoothly when new joke is generated
       window.scrollTo({
         top: document.body.scrollHeight,
         behavior: 'smooth'
@@ -81,7 +78,6 @@ export default function Chat() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-900 via-purple-900 to-black py-6 px-4 overflow-hidden relative">
-      {/* Confetti effect positioned at viewport */}
       {showConfetti && (
         <div style={{
           position: 'fixed',
@@ -168,7 +164,6 @@ export default function Chat() {
               disabled={isLoading || !state.topic || !state.tone || !state.type}
               onClick={generateJoke}
             >
-              {/* Button glow effect */}
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 transform -translate-x-full group-hover:translate-x-full transition-all duration-1000"></span>
 
               {isLoading ? (

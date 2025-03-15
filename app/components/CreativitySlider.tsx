@@ -4,10 +4,8 @@ interface CreativitySliderProps {
 }
 
 export function CreativitySlider({ value, onChange }: CreativitySliderProps) {
-  // Ensure value is a number
   const numericValue = typeof value === 'string' ? parseFloat(value) : value;
 
-  // Generate label and color gradient based on value
   const getCreativityLabel = () => {
     if (numericValue < 0.3) return { label: "Conservative", color: "blue" };
     if (numericValue < 0.5) return { label: "Balanced", color: "teal" };
@@ -17,7 +15,6 @@ export function CreativitySlider({ value, onChange }: CreativitySliderProps) {
 
   const { label, color } = getCreativityLabel();
 
-  // Get appropriate tailwind classes based on color
   const getBadgeClasses = () => {
     switch (color) {
       case 'blue':
@@ -43,27 +40,19 @@ export function CreativitySlider({ value, onChange }: CreativitySliderProps) {
             <div className="text-xs text-purple-400 font-semibold">Wild</div>
           </div>
 
-          {/* Custom slider with visible styling */}
           <div className="relative h-8 flex items-center">
-            {/* Background track */}
-            <div className="absolute w-full h-2 bg-gray-700 rounded-full"></div>
-
-            {/* Colored progress bar */}
+            <div className="absolute w-full h-2 bg-gray-700 rounded-full" />
             <div
               className="absolute h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full"
               style={{ width: `${numericValue * 100}%` }}
-            ></div>
-
-            {/* Visible thumb */}
+            />
             <div
               className="absolute w-6 h-6 bg-white rounded-full shadow-lg cursor-pointer transition-all duration-150 transform hover:scale-110 border-2 border-purple-500"
               style={{
                 left: `calc(${numericValue * 100}% - 12px)`,
                 boxShadow: '0 0 10px rgba(147, 51, 234, 0.5)'
               }}
-            ></div>
-
-            {/* Actual input control (invisible but functional) */}
+            />
             <input
               type="range"
               min="0"
