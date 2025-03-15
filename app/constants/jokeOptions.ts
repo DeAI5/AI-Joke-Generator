@@ -4,6 +4,8 @@ export const topics = [
   { emoji: "🙏", value: "Religious", color: "purple" },
   { emoji: "👶", value: "Childs", color: "pink" },
   { emoji: "👩‍💼", value: "Your mom is so fat that...", color: "orange" },
+  { emoji: "🤦‍♂️", value: "Dad Jokes", color: "black" },
+  { emoji: "🏆", value: "Puns", color: "yellow" },
 ] as const;
 
 export const tones = [
