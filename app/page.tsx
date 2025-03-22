@@ -12,6 +12,7 @@ const ReactConfetti = dynamic(() => import("react-confetti"), { ssr: false });
 
 interface JokeState {
   topic: string;
+  customTopic: string;
   tone: string;
   type: string;
   temperature: number;
@@ -21,6 +22,7 @@ export default function Chat() {
   const { messages, append, isLoading } = useChat();
   const [state, setState] = useState<JokeState>({
     topic: "",
+    customTopic: "",
     tone: "",
     type: "",
     temperature: 0.7
@@ -70,9 +72,10 @@ export default function Chat() {
   };
 
   const generateJoke = () => {
+    const topicToUse = state.topic === 'custom' ? state.customTopic : state.topic;
     append({
       role: "user",
-      content: `Generate a ${state.topic} joke in a ${state.tone} tone, make it a ${state.type} type of joke`,
+      content: `Generate a ${topicToUse} joke in a ${state.tone} tone, make it a ${state.type} type of joke`,
     });
   };
 
@@ -125,13 +128,26 @@ export default function Chat() {
           </div>
 
           <div className="w-full space-y-8 backdrop-blur-sm bg-gray-900/50 p-8 rounded-2xl shadow-xl border border-gray-800/50 hover:border-purple-900/50 transition-all duration-300">
-            <RadioButtonGroup
-              title="TOPIC"
-              options={topics}
-              name="topic"
-              selectedValue={state.topic}
-              onChange={handleChange}
-            />
+            <div className="space-y-4">
+              <RadioButtonGroup
+                title="TOPIC"
+                options={[...topics, { value: 'custom', label: 'Custom Topic' }]}
+                name="topic"
+                selectedValue={state.topic}
+                onChange={handleChange}
+              />
+              
+              {state.topic === 'custom' && (
+                <input
+                  type="text"
+                  name="customTopic"
+                  value={state.customTopic}
+                  onChange={handleChange}
+                  placeholder="Enter your custom topic..."
+                  className="w-full px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+              )}
+            </div>
 
             <RadioButtonGroup
               title="TONE"
@@ -156,12 +172,14 @@ export default function Chat() {
 
             <button
               className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-300
-                ${isLoading || !state.topic || !state.tone || !state.type
+                ${isLoading || !state.tone || !state.type || 
+                  (state.topic === 'custom' && !state.customTopic) || !state.topic
                   ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
                   : 'bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white hover:shadow-lg cursor-pointer hover:shadow-purple-500/30 hover:scale-[1.01] relative overflow-hidden group'
                 }
               `}
-              disabled={isLoading || !state.topic || !state.tone || !state.type}
+              disabled={isLoading || !state.tone || !state.type || 
+                (state.topic === 'custom' && !state.customTopic) || !state.topic}
               onClick={generateJoke}
             >
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 transform -translate-x-full group-hover:translate-x-full transition-all duration-1000"></span>
