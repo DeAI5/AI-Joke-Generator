@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useChat } from "@ai-sdk/react";
 import { JokeEvaluationDisplay } from "./components/JokeEvaluationDisplay";
 import { RadioButtonGroup } from "./components/RadioButtonGroup";
 import { CreativitySlider } from "./components/CreativitySlider";
@@ -19,18 +18,20 @@ interface JokeState {
 }
 
 export default function Chat() {
-  const { messages, append, isLoading } = useChat();
+  const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [windowSize, setWindowSize] = useState({
+    width: typeof window !== 'undefined' ? window.innerWidth : 0,
+    height: typeof window !== 'undefined' ? window.innerHeight : 0,
+  });
+
   const [state, setState] = useState<JokeState>({
     topic: "",
     customTopic: "",
     tone: "",
     type: "",
     temperature: 0.7
-  });
-  const [showConfetti, setShowConfetti] = useState(false);
-  const [windowSize, setWindowSize] = useState({
-    width: typeof window !== 'undefined' ? window.innerWidth : 0,
-    height: typeof window !== 'undefined' ? window.innerHeight : 0,
   });
 
   useEffect(() => {
@@ -47,21 +48,6 @@ export default function Chat() {
     }
   }, []);
 
-
-  useEffect(() => {
-    if (messages.length > 0 && !messages[messages.length - 1]?.content.startsWith("Generate")) {
-      setShowConfetti(true);
-      const timer = setTimeout(() => setShowConfetti(false), 5000);
-
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: 'smooth'
-      });
-
-      return () => clearTimeout(timer);
-    }
-  }, [messages]);
-
   const handleChange = ({
     target: { name, value },
   }: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,12 +57,39 @@ export default function Chat() {
     });
   };
 
-  const generateJoke = () => {
+  const generateJoke = async () => {
     const topicToUse = state.topic === 'custom' ? state.customTopic : state.topic;
-    append({
-      role: "user",
-      content: `Generate a ${topicToUse} joke in a ${state.tone} tone, make it a ${state.type} type of joke`,
-    });
+    setIsLoading(true);
+    setMessages([]);
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: [{
+            role: 'user',
+            content: `Generate a ${topicToUse} joke in a ${state.tone} tone, make it a ${state.type} type of joke`
+          }]
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate joke');
+      }
+
+      const data = await response.json();
+      setMessages([data]);
+      setShowConfetti(true);
+      const timer = setTimeout(() => setShowConfetti(false), 5000);
+      return () => clearTimeout(timer);
+    } catch (error) {
+      console.error('Error generating joke:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

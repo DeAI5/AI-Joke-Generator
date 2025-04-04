@@ -15,8 +15,7 @@
 - Next.js 13+ (App Router)
 - TypeScript
 - Tailwind CSS
-- Vercel AI SDK
-- OpenAI API
+- Venice AI API
 
 ## Getting Started
 
@@ -31,9 +30,9 @@ cd joke-generator
 npm install
 ```
 
-3. Create a `.env.local` file and add your OpenAI API key:
+3. Create a `.env.local` file and add your Venice AI API key:
 ```
-OPENAI_API_KEY=your_api_key_here
+VENICE_API_KEY=your_venice_api_key_here
 ```
 
 4. Run the development server:
@@ -60,6 +59,17 @@ git push origin feature/add-new-joke-topics
 ```
 
 9. Open a Pull Request (PR) 🎉
+
+## API Integration
+
+This application uses the Venice AI API for joke generation. The API key should be stored in the `.env.local` file as `VENICE_API_KEY`. The application makes direct HTTP requests to the Venice AI API endpoint at `https://api.venice.ai/api/v1/chat/completions`.
+
+### Environment Variables
+
+- `VENICE_API_KEY`: Your Venice AI API key (required)
+  - Get your API key from [Venice AI](https://venice.ai)
+  - Store it in `.env.local` file
+  - Never commit this file to version control
 
 ## License
 
